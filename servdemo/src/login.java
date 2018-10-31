@@ -38,14 +38,10 @@ public class login extends HttpServlet
 			String query  = "insert into LeaveApplication values("+usrid+","+fromdate+","+todate+","+leavedays+","+reason+")";
 			out.println(query);
 			int update = mystmt.executeUpdate("insert into LeaveApplication values('"+usrid+"','"+fromdate+"','"+todate+"','"+leavedays+"','"+reason+"')");
-		    if(update>0)
+		   try
 		    {
 		    	out.println(update+"Rows inserted.");
-		    }
-		    	
-			
 			ResultSet myRs = mystmt.executeQuery("select UserName from Users where UserId="+usrid);
-			
 			out.print("Hello, ");
 			while(myRs.next())
 			{
@@ -54,6 +50,14 @@ public class login extends HttpServlet
 			out.println("From date "+fromdate+" - to date -  "+todate);
 			out.print("For days : ");
 			out.println(leavedays);
+		    }
+		    catch(java.sql.SQLIntegrityConstraintViolationException e)
+		    {
+		     out.println(e);
+		     myConn.close();
+		    
+		    }
+		    		
 		} 
 		catch (SQLException | ClassNotFoundException e)
 		{
